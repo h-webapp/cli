@@ -1,0 +1,40 @@
+{
+  "name": "h-application",
+  "version": "1.0.10",
+  "description": "web,web-application,application,module,web-module",
+  "bin": "./bin/h-application.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "start": "node server/server.js",
+    "start-debug": "node server/server-debug.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kouyjes/web-application.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-copy": "^1.0.1",
+    "gulp-imagemin": "^3.3.0",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-uglify": "^3.0.0",
+    "nm-web-server": "^1.1.2",
+    "watch": "^1.0.2"
+  },
+  "bugs": {
+    "url": "https://github.com/kouyjes/web-application/issues"
+  },
+  "homepage": "https://github.com/kouyjes/web-application#readme",
+  "dependencies": {
+    "dom-resource-loader": "^1.0.9",
+    "injector-ioc": "^1.0.8",
+    "webapp-core": "^0.0.11"
+  }
+}

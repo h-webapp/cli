@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Application statistics</title>
+    <meta charset="UTF-8">
+    <style type="text/css">
+        html,body{
+            width:100%;
+            height:100%;
+            margin:0;
+            padding:0;
+            overflow:hidden;
+            background: #dcefe5;
+        }
+
+        iframe{
+            display:none;
+        }
+        canvas{
+            border:none;
+            outline:none;
+        }
+        #statistics{
+            width:100%;
+            height:100%;
+            overflow:hidden;
+        }
+    </style>
+    <script src="vendor/gojs/go-debug.js"></script>
+    <script src="dev/diagram.js"></script>
+    <script src="dev/statistics.js"></script>
+</head>
+<body>
+<div id="statistics"></div>
+<iframe src="index.html"></iframe>
+<script>
+    var program = document.querySelector('iframe');
+    (function checkLoad(){
+        var define;
+        try{
+            define = program.contentWindow.HERE.FRAMEWORK.define;
+            if(define && define('main')){
+                programLoaded();
+                return;
+            }
+        }catch(e){
+
+        }
+        setTimeout(checkLoad,300);
+    })();
+    function programLoaded(){
+
+        var config = statistics();
+        var model = new go.Model.fromJson(config);
+        var diagram = new Diagram({
+            container:'statistics',
+            model:model
+        });
+        diagram.render();
+    }
+
+
+</script>
+</body>
+</html>

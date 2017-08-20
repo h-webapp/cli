@@ -1,0 +1,22 @@
+{
+  "modules":[
+    {"name":"env","url":"module/env/index.js"},
+    {"name":"http","url":"module/http/index.js"},
+    {"name":"user","url":"module/user/index.js"}
+  ],
+  "apps":[
+    {"name":"system","url":"app/system/index.js"},
+    {"name":"search","url":"app/search/index.js"},
+    {"name":"cube-search","url":"app/cube-search/index.js"},
+    {"name":"org","url":"app/org/index.js"},
+    {"name":"analysis","url":"app/analysis/index.js"},
+    {"name":"common-comp","url":"app/common-comp/index.js"},
+    {"name":"menu","url":"app/menu/index.js"},
+    {"name":"browse","url":"app/browse/index.js"},
+    {"name":"info-dialog","url":"app/info-dialog/index.js"}
+  ],
+  "main":"main/index.js",
+  "attributes":{
+    "mapServer":"http://172.24.62.106"
+  }
+}

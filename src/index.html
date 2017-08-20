@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>X3New</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="index.css"/>
+    <script src="vendor/jquery/dist/jquery.js"></script>
+    <script src="vendor/vue/dist/vue.js"></script>
+    <script src="vendor/deferred-promise/promise.js"></script>
+    <script src="vendor/vue-router/dist/vue-router.js"></script>
+    <script src="node_modules/injector-ioc/dest/injector.js"></script>
+    <script src="node_modules/dom-resource-loader/dest/resource-loader.js"></script>
+    <script src="node_modules/webapp-core/build/js/webapp-core.js"></script>
+    <script>
+        if(!window.Promise){
+            window.Promise = HERE.$Promise;
+        }
+    </script>
+</head>
+<body>
+    <div v-cloak id="deepClue-app" class="deepclue-main">
+        <nav class="nav">
+            <router-link to="/search">search</router-link>
+            <router-link to="/cube-search">cube-search</router-link>
+
+            <router-link to="/browse">浏览</router-link>
+            <router-link to="/info-dialog">提示对话框</router-link>
+
+            <router-link to="/menu">环形菜单</router-link>
+            <router-link to="/analysis">依赖关系</router-link>
+
+            <div>
+                <a target="_blank" href="core/base/annular-menu/example/index.html">menu Demo</a>
+                <a target="_blank" href="core/base/annular-menu/example/index-default.html">menu Demo(default)</a>
+                <a target="_blank" href="dev.html">structure</a>
+            </div>
+        </nav>
+        <div class="content">
+            <router-view></router-view>
+        </div>
+
+    </div>
+
+    <script src="env/environment.js"></script>
+</body>
+</html>
