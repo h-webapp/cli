@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const gulp = require('gulp');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
@@ -6,6 +7,7 @@ var copy = require('gulp-copy');
 var del = require('del');
 var imagemin = require('gulp-imagemin');
 var sourcemaps = require('gulp-sourcemaps');
+const dirName = __dirname;
 var paths = {
     copyFiles:['src/**/!(*min.js|*.scss|*.less)'],
     scripts: ['build/**/*.js','!build/vendor/**'],
@@ -33,18 +35,17 @@ gulp.task('dir-build', function () {
         }
     });
 });
-gulp.task('html-script', function () {
+gulp.task('html-script',['dir-build'], function () {
 
 
     var html = fs.readFileSync('src/index.html').toString();
     var scriptReg = /<script\s*src\s*=\s*"\s*(\S+)\s*"\s*>\s*<\/script>/ig;
     html = html.replace(scriptReg, function (all,src) {
-        var index = src.lastIndexOf('/');
-        if(index >= 0){
-            src = src.slice(index + 1);
-        }
-        return '<script src="' + src + '"></script>';
+        var _src = path.resolve(dirName,src);
+        _src = path.relative(dirName,_src);
+
+        return '<script src="' + _src + '"></script>';
     });
-    fs.writeFileSync('build/template.html',html);
+    fs.writeFileSync('build/index.html',html);
 });
 gulp.task('default', ['uglifyjs']);
