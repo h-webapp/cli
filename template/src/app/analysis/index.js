@@ -3,7 +3,7 @@
         this.route = {
             path:'/analysis',
             component:{
-                template:'<iframe-comp url="dev.html"/>'
+                template:'<iframe-comp url="sys/index.html"/>'
             }
         };
         this.resource = {
