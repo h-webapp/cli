@@ -5,9 +5,9 @@ var statistics = (function () {
     function appName(name){
         return name + '_Application';
     }
-    function statistics(){
+    function statistics(win){
 
-        var FRAMEWORK = program.contentWindow.HERE.FRAMEWORK;
+        var FRAMEWORK = win.HERE.FRAMEWORK;
         var Application = FRAMEWORK.Application;
         var Module = FRAMEWORK.Module;
         var modules = Module.modules();

@@ -62,7 +62,12 @@ html, body {
       height: 30px;
       outline: none;
       border: 1px solid #ccc;
-      text-indent: 15px; }
+      text-indent: 15px;
+      color: blue;
+      font-size: 16px;
+      background-color: #c6e9ea; }
+      .system .input-content input:focus {
+        background-color: #fff; }
   .system .statistics {
     flex: 1; }
     .system .statistics #statistics {
