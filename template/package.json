@@ -25,12 +25,12 @@
     "watch": "^1.0.2"
   },
   "dependencies": {
-    "dom-resource-loader": "^1.0.9",
+    "dom-resource-loader": "^1.0.17",
     "injector-ioc": "^1.0.8",
+    "jquery": "^3.2.1",
+    "promise-deferred-sim": "^1.0.2",
     "vue": "^2.4.2",
     "vue-router": "^2.7.0",
-    "webapp-core": "^0.0.11",
-    "promise-deferred-sim": "^1.0.2",
-    "jquery": "^3.2.1"
+    "webapp-core": "^0.0.11"
   }
 }
