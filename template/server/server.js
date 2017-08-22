@@ -3,6 +3,14 @@ const path = require('path');
 var dir = path.resolve(__dirname,'../src');
 var nodeResource = path.resolve(__dirname,'../node_modules');
 var apiDir = path.resolve(__dirname,'../mock');
+var proxy = {
+    pathRule:'^/api',
+    server:'192.168.1.100',
+    port:8088,
+    headers:[]
+};
+// disabled proxy
+proxy = null;
 var config = {
     contexts:[
         {
@@ -13,6 +21,7 @@ var config = {
             sessionCookiePath:null,
             disabledAgentCache:true,
             port:8080,
+            proxy:proxy,
             docBase:[
                 {
                     path:'/',

@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "webapp demo",
   "version": "1.0.0",
   "description": "",
   "directories": {
@@ -25,6 +25,9 @@
   "dependencies": {
     "dom-resource-loader": "^1.0.9",
     "injector-ioc": "^1.0.8",
-    "webapp-core": "^0.0.11"
+    "vue": "^2.4.2",
+    "vue-router": "^2.7.0",
+    "webapp-core": "^0.0.11",
+    "promise-deferred-sim": "^1.0.2"
   }
 }
