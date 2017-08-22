@@ -129,8 +129,9 @@ gulp.task('minScript',['minDeclareScript'], function () {
 });
 
 gulp.task('buildRelease',['minScript'], function () {
-
+    return del([paths.buildDist]);
 });
+gulp.task('buildReleaseNoDel',['minScript']);
+
 gulp.task('clean',['cleanDev','cleanRelease']);
-gulp.task('build',['buildDev','buildRelease'])
-gulp.task('default', ['buildRelease']);
+gulp.task('build',['buildDev','buildReleaseNoDel']);
