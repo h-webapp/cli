@@ -1,7 +1,12 @@
 (function () {
     var contentEl = document.querySelector('.statistics');
     var input = document.querySelector('#urlInput');
-    input.value = location.protocol + '//' + location.host + '/index.html';
+    var path = location.href;
+    var level = 2;
+    while(level-- > 0){
+        path = path.slice(0,path.lastIndexOf('/'));
+    }
+    input.value = path + '/index.html';
 
     var program;
     var timeout;

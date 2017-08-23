@@ -1,14 +1,12 @@
 {
   "name": "h-application",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "web,web-application,application,module,web-module",
   "bin": "./bin/h-application.js",
   "directories": {
     "doc": "doc"
   },
   "scripts": {
-    "start": "node server/server.js",
-    "start-debug": "node server/server-debug.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {

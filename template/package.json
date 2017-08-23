@@ -8,6 +8,12 @@
   "scripts": {
     "start": "node server/server.js",
     "start-debug": "node server/server-debug.js",
+    "build": "gulp build",
+    "build-dev": "gulp buildDev",
+    "build-release": "gulp buildRelease",
+    "clean": "gulp clean",
+    "clean-dev": "gulp cleanDev",
+    "clean-release": "gulp cleanRelease",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "ISC",
@@ -25,12 +31,12 @@
     "watch": "^1.0.2"
   },
   "dependencies": {
-    "dom-resource-loader": "^1.0.17",
+    "dom-resource-loader": "^1.0.20",
     "injector-ioc": "^1.0.8",
     "jquery": "^3.2.1",
     "promise-deferred-sim": "^1.0.2",
     "vue": "^2.4.2",
     "vue-router": "^2.7.0",
-    "webapp-core": "^0.0.11"
+    "webapp-core": "^1.0.7"
   }
 }
