@@ -1,4 +1,5 @@
 (function () {
+    var a = document.createElement('a');
     var contentEl = document.querySelector('.statistics');
     var input = document.querySelector('#urlInput');
     var path = location.href;
@@ -40,6 +41,15 @@
         diagram.render();
     }
     window.refreshUrl = function(){
+        a.href = input.value;
+        if(a.host !== location.host){
+            HERE.UI.InfoDialog.error({
+                content:'origin ' + input.value + ' has been blocked from loading by Cross-Origin Resource Sharing policy',
+                autoRemove:true,
+                autoRemoveTime:3000
+            });
+            return;
+        }
         if(program && program.parentNode){
             if(program.remove){
                 program.remove();
