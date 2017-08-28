@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var copy = require('gulp-copy');
 var distDir = process.argv[process.argv.length - 1];
 var paths = {
-    files: ['./template/**/*'],
+    files: ['./vue-template/**/*'],
     dist: distDir
 };
 
