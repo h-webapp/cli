@@ -1,3 +1,4 @@
+'use strict';
 var server = require('nm-web-server');
 const path = require('path');
 var dir = path.resolve(__dirname,'../src');

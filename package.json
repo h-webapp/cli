@@ -1,6 +1,6 @@
 {
   "name": "h-application",
-  "version": "1.0.23",
+  "version": "1.0.24",
   "description": "web,web-application,application,module,web-module",
   "bin": "./bin/h-application.js",
   "directories": {
@@ -8,11 +8,6 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "del": "^3.0.0",
-    "gulp": "^3.9.1",
-    "gulp-copy": "^1.0.1"
   },
   "repository": {
     "type": "git",
