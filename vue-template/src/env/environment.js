@@ -6,13 +6,14 @@
         urls:[configPath]
     }).then(function (dataArray) {
         var data = dataArray[0];
-        register.apps = data.apps;
-        register.modules = data.modules;
-        register.afterLoadResource = {
-            type:'js',
-            urls:[data.main]
-        };
+        register.apps(data.apps);
+        register.modules(data.modules);
         register.register().then(function () {
+            return ResourceLoader.load({
+                type:'js',
+                urls:[data.main]
+            });
+        }).then(function () {
             initEnvironment(data);
         });
     });
