@@ -3,6 +3,7 @@ const path = require('path');
 const gulp = require('gulp');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
+const babel = require('gulp-babel');
 var copy = require('gulp-copy');
 var del = require('del');
 var gulpMerge = require('merge-stream');
@@ -111,11 +112,15 @@ function gulpGroups(resources){
     var streams = resources.map(function (resource) {
         return gulp.src([resource])
             .pipe(sourcemaps.init())
+            .pipe(babel({
+                presets: [[ "es2015", { modules: false } ]],
+                plugins: []
+            }))
             .pipe(uglify())
             .on('error', function (err) {
                 console.error(err);
             })
-            .pipe(sourcemaps.write())
+            //.pipe(sourcemaps.write())
             .pipe(gulp.dest(path.dirname(resource)));
     });
     return gulpMerge(streams);
