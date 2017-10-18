@@ -9,6 +9,8 @@ var del = require('del');
 var gulpMerge = require('merge-stream');
 var imagemin = require('gulp-imagemin');
 var sourcemaps = require('gulp-sourcemaps');
+var cleanCSS = require('gulp-clean-css');
+var htmlParser = require("htmlparser2");
 
 var paths = {
     copyFiles:['src/**/*'],
@@ -55,11 +57,10 @@ gulp.task('copyRelease',['buildDev'], function () {
         .pipe(gulp.dest(paths.releaseDist));
 });
 
-function htmlParseTasks(){
+function htmlScriptParseTasks(){
     var files = fs.readdirSync(paths.releaseDist).filter(function (file) {
         return !!file.match(/\.html?$/);
     });
-    var scriptReg = /<script\s*src\s*=\s*"\s*([^"]+)\s*"\s*>\s*<\/script>/g;
     var scripts = [];
     files.forEach(function (file) {
         var filePath = path.resolve(paths.releaseDist,file);
@@ -67,11 +68,45 @@ function htmlParseTasks(){
             return;
         }
         var html = fs.readFileSync(filePath).toString();
-        html.replace(scriptReg, function (all,script) {
-            scripts.push(path.resolve(paths.releaseDist,script));
-        });
+
+        var jsReg = /\.js$/;
+        var parser = new htmlParser.Parser({
+            onopentag: function(name, attribs){
+                var src = attribs.src;
+                if(name.toLowerCase() === "script" && jsReg.test(src)){
+                    scripts.push(path.resolve(paths.releaseDist,src));
+                }
+            }
+        }, {decodeEntities: true});
+        parser.write(html);
+        parser.end();
     });
     return scripts;
+}
+function htmlLinkParseTasks(){
+    var files = fs.readdirSync(paths.releaseDist).filter(function (file) {
+        return !!file.match(/\.html?$/);
+    });
+    var links = [];
+    files.forEach(function (file) {
+        var filePath = path.resolve(paths.releaseDist,file);
+        if(!fs.existsSync(filePath)){
+            return;
+        }
+        var html = fs.readFileSync(filePath).toString();
+        var cssReg = /\.css$/;
+        var parser = new htmlParser.Parser({
+            onopentag: function(name, attribs){
+                var href = attribs.href;
+                if(name.toLowerCase() === "link" && cssReg.test(href)){
+                    links.push(path.resolve(paths.releaseDist,href));
+                }
+            }
+        }, {decodeEntities: true});
+        parser.write(html);
+        parser.end();
+    });
+    return links;
 }
 function moduleDepScripts(){
     var files = moduleParseTasks();
@@ -94,6 +129,27 @@ function moduleDepScripts(){
     });
     return depScripts;
 }
+function moduleDepCss(){
+    var files = moduleParseTasks();
+    var cssReg = /(["'])\s*([^"']+\.css)\s*\1/g;
+    var depCss = [];
+
+    files.forEach(function (file) {
+
+        if(!fs.existsSync(file)){
+            return;
+        }
+        var content = fs.readFileSync(file).toString();
+        content.replace(cssReg, function (all,m1,src) {
+            if(src.startsWith('/')){
+                depCss.push(path.resolve(paths.releaseDist,src.replace(/^\/+/g,'')));
+            }else{
+                depCss.push(path.resolve(path.dirname(file),src));
+            }
+        });
+    });
+    return depCss;
+}
 function moduleParseTasks(){
 
     var config = require(path.resolve(paths.releaseDist,'env/applications.json'));
@@ -108,10 +164,10 @@ function moduleParseTasks(){
     }
     return files;
 }
-function gulpGroups(resources){
+function gulpScriptGroups(resources){
     var streams = resources.map(function (resource) {
         return gulp.src([resource])
-            .pipe(sourcemaps.init())
+            //.pipe(sourcemaps.init())
             .pipe(babel({
                 presets: [[ "es2015", { modules: false } ]],
                 plugins: []
@@ -125,18 +181,32 @@ function gulpGroups(resources){
     });
     return gulpMerge(streams);
 }
+function gulpCssGroups(resources){
+    var streams = resources.map(function (resource) {
+        return gulp.src([resource])
+            .pipe(cleanCSS())
+            .on('error', function (err) {
+                console.error(err);
+            })
+            .pipe(gulp.dest(path.dirname(resource)));
+    });
+    return gulpMerge(streams);
+}
 gulp.task('minDeclareScript',['copyRelease'], function () {
-    var resources = htmlParseTasks().concat(moduleParseTasks());
-    return gulpGroups(resources);
+    var resources = htmlScriptParseTasks().concat(moduleParseTasks());
+    return gulpScriptGroups(resources);
 });
 gulp.task('minScript',['minDeclareScript'], function () {
-    return gulpGroups(moduleDepScripts());
+    return gulpScriptGroups(moduleDepScripts());
 });
-
-gulp.task('buildRelease',['minScript'], function () {
+gulp.task('minCss',['minScript'], function () {
+    var resources = htmlLinkParseTasks().concat(moduleDepCss());
+    return gulpCssGroups(resources);
+});
+gulp.task('buildRelease',['minScript','minCss'], function () {
     return del([paths.buildDist]);
 });
-gulp.task('buildReleaseNoDel',['minScript']);
+gulp.task('buildReleaseNoDel',['minScript','minCss']);
 
 gulp.task('clean',['cleanDev','cleanRelease']);
 gulp.task('build',['buildDev','buildReleaseNoDel']);
