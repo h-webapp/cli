@@ -14,9 +14,11 @@
     Application.prototype.component = function (id,definition) {
         if(typeof definition === 'object'){
             var templateUrl = definition['templateUrl'],
-                cssUrl = definition['cssUrl'];
+                cssUrl = definition['cssUrl'],
+                depResource = definition['depResource'];
             delete definition['templateUrl'];
             delete definition['cssUrl'];
+            delete definition['depResource'];
             if(!templateUrl && !cssUrl){
                 return Vue.component.apply(Vue,arguments);
             }
@@ -35,15 +37,26 @@
                 });
             }
 
+            if(!(depResource instanceof Array)){
+                depResource = [depResource];
+            }
+            depResource = depResource.filter(function (resource) {
+                return resource && resource.type && resource.urls instanceof Array;
+            });
+
+            resources = resources.concat(depResource);
+
             var _this = this;
             var callback = function (resolve) {
-                _this.loadResource.apply(_this,resources).then(function (dataArray) {
+                Promise.all(resources.map(function (resource) {
+                    return _this.loadResource(resource);
+                })).then(function (dataArray) {
                     if(templateUrl){
-                        definition.template = dataArray.shift();
+                        definition.template = dataArray.shift()[0];
                     }
                     resolve(definition);
                 });
-            }
+            };
             return Vue.component(id,callback);
         }
         return Vue.component.apply(Vue,arguments);
