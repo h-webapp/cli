@@ -3,6 +3,8 @@
     function buildRoute(routeOption){
         var route = {};
         route.path = routeOption.path;
+        route.name = routeOption.name;
+        route.redirect = routeOption.redirect;
         route.component = routeOption.component || {
                 template:'<span>empty component</span>'
             };

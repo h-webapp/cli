@@ -17,6 +17,6 @@
   ],
   "main":"main/index.js",
   "attributes":{
-    "mapServer":"http://172.24.62.106"
+    "apiPrefix":"api"
   }
 }
