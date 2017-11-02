@@ -2,7 +2,9 @@
     Module.module('http').service('httpService', ['environment',function (environment) {
         var pathParamReg = new RegExp('\{([^/{}]+)\}','g');
         function ensureStartsWith(url){
-            url = url || '';
+            if(!url){
+                return '';
+            }
             if(!/^\//.test(url)){
                 url = '/' + url;
             }
