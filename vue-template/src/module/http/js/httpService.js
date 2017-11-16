@@ -16,7 +16,7 @@
             pathParams = pathParams || {};
             url = url.replace(pathParamReg, function (all,name) {
                 var val = pathParams[name];
-                if(val === void 0){
+                if(val === void 0 || val === null){
                     return '';
                 }
                 return val + '';
@@ -24,7 +24,6 @@
 
             url = ensureStartsWith(url);
             url = apiPrefix + url;
-            url = url.replace(/\/+/g,'/');
 
             var a = document.createElement('a');
             a.href = url;
