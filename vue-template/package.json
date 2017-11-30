@@ -45,6 +45,7 @@
     "dom-resource-loader": "^1.0.23",
     "injector-ioc": "^1.0.8",
     "jquery": "^3.2.1",
+    "lz-string": "^1.4.4",
     "promise-deferred-sim": "^1.0.2",
     "vue": "^2.4.2",
     "vue-router": "^2.7.0",
