@@ -2,7 +2,8 @@
   "modules":[
     {"name":"env","url":"module/env/index.js"},
     {"name":"http","url":"module/http/index.js"},
-    {"name":"user","url":"module/user/index.js"}
+    {"name":"user","url":"module/user/index.js"},
+    {"name":"util","url":"module/util/index.js"}
   ],
   "apps":[
     {"name":"system","url":"app/system/index.js"},
@@ -11,6 +12,9 @@
     {"name":"org","url":"app/org/index.js"},
     {"name":"analysis","url":"app/analysis/index.js"},
     {"name":"common-comp","url":"app/common-comp/index.js"},
+    {"name":"comp","url":"app/comp/index.js"},
+    {"name":"directive","url":"app/directive/index.js"},
+    {"name":"image","url":"app/image/index.js"},
     {"name":"menu","url":"app/menu/index.js"},
     {"name":"browse","url":"app/browse/index.js"},
     {"name":"info-dialog","url":"app/info-dialog/index.js"}

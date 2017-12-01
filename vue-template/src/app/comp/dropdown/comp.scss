@@ -1,0 +1,24 @@
+@import "../../../util/css/util";
+@import "../../../util/css/color";
+.mg-dropdown{
+  position: relative;
+  display: inline-block;
+  @include keyframes(mg-dropdown-enter){
+    from{
+      @include css(transform,scaleY(0));
+    }
+    to{
+      @include css(transform,scaleY(1));
+    }
+  }
+  .dropdown-pop{
+    position: absolute;
+    background-color: #fff;
+    z-index:100;
+    top:100%;
+    left:50%;
+    border:1px solid $borderColor;
+    @include css(transform-origin,top);
+    @include css(animation,mg-dropdown-enter .4s);
+  }
+}

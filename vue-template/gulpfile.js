@@ -74,7 +74,8 @@ function htmlScriptParseTasks(){
             onopentag: function(name, attribs){
                 var src = attribs.src;
                 if(name.toLowerCase() === "script" && jsReg.test(src)){
-                    scripts.push(path.resolve(paths.releaseDist,src));
+                    let filePath = path.resolve(paths.releaseDist,src);
+                    scripts.push(filePath);
                 }
             }
         }, {decodeEntities: true});
@@ -167,16 +168,20 @@ function moduleParseTasks(){
 function gulpScriptGroups(resources){
     var streams = resources.map(function (resource) {
         return gulp.src([resource])
-            //.pipe(sourcemaps.init())
             .pipe(babel({
                 presets: [[ "es2015", { modules: false } ]],
                 plugins: []
             }))
-            .pipe(uglify())
+            .pipe(uglify({
+                compress:{
+                    drop_console:true,
+                    unused:true,
+                    dead_code:true
+                }
+            }))
             .on('error', function (err) {
                 console.error(err);
             })
-            //.pipe(sourcemaps.write())
             .pipe(gulp.dest(path.dirname(resource)));
     });
     return gulpMerge(streams);
@@ -210,3 +215,4 @@ gulp.task('buildReleaseNoDel',['minScript','minCss']);
 
 gulp.task('clean',['cleanDev','cleanRelease']);
 gulp.task('build',['buildDev','buildReleaseNoDel']);
+

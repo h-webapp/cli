@@ -1,0 +1,6 @@
+<div class="mg-dropdown" @click="toggleCollapse()">
+    <slot :collapse="collapse"></slot>
+    <div :collapse="collapse" ref="dropdown" class="dropdown-pop" v-show="!collapse">
+        <slot name="dropdown"></slot>
+    </div>
+</div>
