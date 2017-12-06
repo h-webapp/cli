@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "dom-resource-loader": "^1.0.23",
-    "injector-ioc": "^1.0.8",
+    "injector-ioc": "^1.1.8",
     "jquery": "^3.2.1",
     "lz-string": "^1.4.4",
     "promise-deferred-sim": "^1.0.2",
