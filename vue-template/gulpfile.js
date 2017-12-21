@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const gulp = require('gulp');
+const clone = require('clone');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 const babel = require('gulp-babel');
@@ -109,11 +110,36 @@ function htmlLinkParseTasks(){
     });
     return links;
 }
+var moduleDepResource = null;
 function moduleDepScripts(){
+    var resource = moduleDepResource || (moduleDepResource = extractJsCssResource());
+    return resource.js;
+}
+function moduleDepCss(){
+    var resource = moduleDepResource || (moduleDepResource = extractJsCssResource());
+    return resource.css;
+}
+function extractJsCssResource(){
     var files = moduleParseTasks();
-    var scriptReg = /(["'])\s*([^"']+\.js)\s*\1/g;
-    var depScripts = [];
+    var resource = extractFileUrl(null,files);
+    return resource;
+}
+function extractFileUrl(root,files){
 
+    var scriptReg = /(["'])\s*([^"']+\.js)\s*\1/g;
+    var cssReg = /(["'])\s*([^"']+\.css)\s*\1/g;
+    var cssUrls = [],
+        jsUrls = [];
+
+    function extractUrl(_root,urls,src){
+        if(src.startsWith('/')){
+            src = path.resolve(paths.releaseDist,src.replace(/^\/+/g,''));
+        }else{
+            src = path.resolve(_root,src);
+        }
+        urls.push(src);
+        return src;
+    }
     files.forEach(function (file) {
 
         if(!fs.existsSync(file)){
@@ -121,39 +147,25 @@ function moduleDepScripts(){
         }
         var content = fs.readFileSync(file).toString();
         content.replace(scriptReg, function (all,m1,src) {
-            if(src.startsWith('/')){
-                depScripts.push(path.resolve(paths.releaseDist,src.replace(/^\/+/g,'')));
-            }else{
-                depScripts.push(path.resolve(path.dirname(file),src));
-            }
+            var _root = root || path.dirname(file);
+            src = extractUrl(_root,jsUrls,src);
+            var result = extractFileUrl(_root,[src]);
+            cssUrls = cssUrls.concat(result.css);
+            jsUrls = jsUrls.concat(result.js);
         });
-    });
-    return depScripts;
-}
-function moduleDepCss(){
-    var files = moduleParseTasks();
-    var cssReg = /(["'])\s*([^"']+\.css)\s*\1/g;
-    var depCss = [];
-
-    files.forEach(function (file) {
-
-        if(!fs.existsSync(file)){
-            return;
-        }
-        var content = fs.readFileSync(file).toString();
         content.replace(cssReg, function (all,m1,src) {
-            if(src.startsWith('/')){
-                depCss.push(path.resolve(paths.releaseDist,src.replace(/^\/+/g,'')));
-            }else{
-                depCss.push(path.resolve(path.dirname(file),src));
-            }
+            var _root = root || path.dirname(file);
+            extractUrl(_root,cssUrls,src,file);
         });
     });
-    return depCss;
+    return {
+        js:jsUrls,
+        css:cssUrls
+    };
 }
+var configPath = path.resolve(paths.releaseDist,'env/applications.json');
 function moduleParseTasks(){
-
-    var config = require(path.resolve(paths.releaseDist,'env/applications.json'));
+    var config = require(configPath);
     var apps = config.apps || [],
         modules = config.modules || [],
         main = config.main;
@@ -166,7 +178,10 @@ function moduleParseTasks(){
     return files;
 }
 function gulpScriptGroups(resources){
-    var streams = resources.map(function (resource) {
+    var minJsReg = /\.min.js$/;
+    var streams = resources.filter(function (resource) {
+        return !minJsReg.test(resource);
+    }).map(function (resource) {
         return gulp.src([resource])
             .pipe(babel({
                 presets: [[ "es2015", { modules: false } ]],
@@ -184,7 +199,29 @@ function gulpScriptGroups(resources){
             })
             .pipe(gulp.dest(path.dirname(resource)));
     });
-    return gulpMerge(streams);
+    return streams;
+}
+function gulpConcatDeclareScript(){
+    var config = require(configPath);
+    var files = moduleParseTasks();
+    var _config = clone(config);
+    _config.release = true;
+    _config.main = '/declare.js';
+    fs.writeFileSync(configPath,JSON.stringify(_config,null,4));
+    var result =  gulp.src(files)
+        .pipe(concat('declare.js'))
+        .pipe(uglify({
+            compress:{
+                drop_console:true,
+                unused:true,
+                dead_code:true
+            }
+        }))
+        .on('error', function (err) {
+            console.error(err);
+        })
+        .pipe(gulp.dest(paths.releaseDist));
+    return result;
 }
 function gulpCssGroups(resources){
     var streams = resources.map(function (resource) {
@@ -198,11 +235,21 @@ function gulpCssGroups(resources){
     return gulpMerge(streams);
 }
 gulp.task('minDeclareScript',['copyRelease'], function () {
-    var resources = htmlScriptParseTasks().concat(moduleParseTasks());
-    return gulpScriptGroups(resources);
+    var resources = htmlScriptParseTasks();
+    var streams = gulpScriptGroups(resources.concat(moduleParseTasks()));
+    return gulpMerge(streams);
 });
-gulp.task('minScript',['minDeclareScript'], function () {
-    return gulpScriptGroups(moduleDepScripts());
+gulp.task('concatScripts',['minDeclareScript'], function () {
+    var config = require(configPath);
+    if(config.concat){
+        var result = gulpConcatDeclareScript();
+        return result;
+    }
+});
+gulp.task('minScript',['concatScripts'], function () {
+    var streams = gulpScriptGroups(moduleDepScripts());
+    var result =  gulpMerge(streams);
+    return result;
 });
 gulp.task('minCss',['minScript'], function () {
     var resources = htmlLinkParseTasks().concat(moduleDepCss());

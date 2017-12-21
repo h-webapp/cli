@@ -8,7 +8,7 @@ var proxy = {
     pathRule:'^/api',
     server:'192.168.1.100',
     port:8088,
-    headers:[]
+    headers:{}
 };
 // disabled proxy
 proxy = null;

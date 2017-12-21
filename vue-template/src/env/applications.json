@@ -19,6 +19,8 @@
     {"name":"browse","url":"app/browse/index.js"},
     {"name":"info-dialog","url":"app/info-dialog/index.js"}
   ],
+  "release":false,
+  "concat":true,
   "main":"main/index.js",
   "attributes":{
     "apiPrefix":"api"
