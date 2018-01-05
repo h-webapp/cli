@@ -18,5 +18,6 @@
   "bugs": {
     "url": "https://github.com/h-webapp/cli/issues"
   },
-  "homepage": "https://github.com/h-webapp/cli#readme"
+  "homepage": "https://github.com/h-webapp/cli#readme",
+  "devDependencies": {}
 }

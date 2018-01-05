@@ -1,4 +1,4 @@
-(function (Application) {
+(function (ResourceLoader,Application) {
     var app = Application.app('image');
     app.service('ImageLoader', function () {
         var queues = [],
@@ -19,19 +19,20 @@
             var url = item.url;
             var resolve = item.resolve,
                 reject = item.reject;
-            var image = new Image();
-            image.onload = function () {
+            var p = ResourceLoader.load({
+                type:'image',
+                urls:[url]
+            }).then(function (data) {
+                var image = data[0] && data[0].target;
                 resolve(image);
-                loading.splice(loading.indexOf(image),1);
+                loading.splice(loading.indexOf(p),1);
                 loop();
-            };
-            image.onerror = function () {
-                reject(image);
-                loading.splice(loading.indexOf(image),1);
+            }, function (e) {
+                reject(e);
+                loading.splice(loading.indexOf(p),1);
                 loop();
-            };
-            image.src = url;
-            loading.push(image);
+            });
+            loading.push(p);
         }
         function loop(){
             var item;
@@ -40,4 +41,4 @@
             }
         }
     });
-})(HERE.FRAMEWORK.Application);
+})(HERE.FRAMEWORK.ResourceLoader,HERE.FRAMEWORK.Application);

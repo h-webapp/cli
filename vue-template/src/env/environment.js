@@ -101,4 +101,4 @@
         ]);
     }
     setTimeout(preLoad);
-})(HERE.FRAMEWORK.define,HERE.ResourceLoader,HERE.FRAMEWORK.Register,HERE.FRAMEWORK.Module);
+})(HERE.FRAMEWORK.define,HERE.FRAMEWORK.ResourceLoader,HERE.FRAMEWORK.Register,HERE.FRAMEWORK.Module);
